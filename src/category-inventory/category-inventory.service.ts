@@ -4,6 +4,8 @@ import { Repository } from 'typeorm';
 import { FindOneOptions, Like, FindManyOptions } from 'typeorm';
 import { CategoryInventory } from './entities/category-inventory.entity';
 import { CategoryInventoryFindInput } from './dto/category-inventory-find.input';
+import { CategoryInventoryInput } from './dto/category-inventory.input';
+import { CategoryInventoryUpdate } from './dto/category-inventory-update.input';
 @Injectable()
 /**
  * Class for comunication with db
@@ -43,19 +45,12 @@ export class CategoryInventoryService {
    * @return CategoryInventory[]
    *
    */
-  async findCategoryInventoryByFilter(
+  async findCategoryInventoryById(
     categoryInventoryFindInput: CategoryInventoryFindInput,
   ): Promise<CategoryInventory[]> {
     const option: FindManyOptions<CategoryInventory> = {
       where: {},
     };
-
-    if (categoryInventoryFindInput._id) {
-      option.where = {
-        ...option.where,
-        _id: categoryInventoryFindInput._id,
-      };
-    }
 
     if (categoryInventoryFindInput.createdAt) {
       option.where = {
@@ -80,4 +75,86 @@ export class CategoryInventoryService {
 
     return this.repositoryCategoryInventory.find(option);
   }
+
+  /**
+     * 
+     *  Function getCategoryInventoyById
+     *  return Category by id
+     * 
+     *  @param _id
+     * 
+     *  @return CategoryInventory
+     * 
+     */
+    async getCategoryInventoyById(_id: string): Promise<CategoryInventory> {
+        const options: FindOneOptions<CategoryInventory> = { where: { _id } };
+        return await this.repositoryCategoryInventory.findOne(options);
+    }
+
+    /**
+     * 
+     *  Function createCategoryInventory
+     *  insert a Category in db
+     * 
+     *  @param CategoryInventoryInput
+     * 
+     *  @return CategoryInventory
+     *  
+     */
+  async createCategoryInventory(
+    categoryInventoryInput: CategoryInventoryInput,
+  ): Promise<CategoryInventory> {
+        let cain = this.repositoryCategoryInventory.create(categoryInventoryInput);
+        cain.createdAt = new Date(Date.now());
+        cain.modifiedAt = new Date(Date.now());
+        return await this.repositoryCategoryInventory.save(cain);
+    }
+
+    /**
+     * 
+     *  Function updateInventory
+     *  function for update inventory data
+     *  
+     *  @param _id
+     *  @param InventoryInputUpdateData 
+     *  
+     *  @return Inventory
+     * 
+     */
+  async updateInventory(
+    _id: string,
+    categoryInventoryUpdate: CategoryInventoryUpdate,
+  ): Promise<CategoryInventory> {
+        let data = categoryInventoryUpdate;
+        data.modifiedAt = new Date(Date.now());
+        await this.repositoryCategoryInventory.update(_id, data);
+        return this.repositoryCategoryInventory.findOne({ where: { _id } });
+    } 
+
+    /**
+     * 
+     *  Function deleteCategoryInventory 
+     *  for delete Category from db
+     * 
+     *  @param _id
+     * 
+     *  @return boolean
+     * 
+     */
+    async deleteCategoryInventory(_id: string): Promise<boolean> {
+      const cain = await this.repositoryCategoryInventory.findOne({
+        where: { _id },
+      });
+
+      if (!cain) throw new Error(`Inventory with ID ${_id} not found`);
+
+      const result = await this.repositoryCategoryInventory.update(_id, {
+        active_status: false,
+        modifiedAt: new Date(Date.now()),
+      });
+
+      return result.affected > 0;
+    }
+
+
 }
