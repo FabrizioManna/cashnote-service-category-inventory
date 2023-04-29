@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GraphQLModule, ApolloDriverConfig } from '@nestjs/graphql';
 import { ApolloDriver } from '@nestjs/apollo';
+import { CategoryInventory } from './category-inventory/entities/category-inventory.entity';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -13,8 +14,8 @@ import { ApolloDriver } from '@nestjs/apollo';
     TypeOrmModule.forRoot({
       type: 'sqlite',
       database: 'db.sqlite',
-      entities: [],
-      synchronize: true
+      entities: [CategoryInventory],
+      synchronize: true,
     }),
 
     GraphQLModule.forRoot<ApolloDriverConfig>({
@@ -23,7 +24,7 @@ import { ApolloDriver } from '@nestjs/apollo';
       playground: process.env.GRAPHQL_PLAY === 'true' ? true : false || true,
     }),
 
-    CategoryInventoryModule
+    CategoryInventoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
