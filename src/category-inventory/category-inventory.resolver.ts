@@ -39,11 +39,7 @@ export class CategoryInventoryResolver {
     @Args('id') id: string,
     @Args('data') data: CategoryInventoryUpdate,
   ): Promise<CategoryInventory> {
-<<<<<<< HEAD
     const cateinv = await this.categoryInventoryService.getCategoryInventoryById(id);
-=======
-    const cateinv = await this.categoryInventoryService.getCategoryInventoyById(id);
->>>>>>> 17777f6ed1e81cc2f0ffec0b466fbcc0c74cbd02
     if (!cateinv) {
       throw new NotFoundException(`License with ID ${id} not found`);
     }
@@ -54,19 +50,12 @@ export class CategoryInventoryResolver {
 
   @Mutation((returns) => Boolean)
   async deleteCategoryInventory(@Args('id') _id: string): Promise<boolean> {
-<<<<<<< HEAD
     const cain = await this.categoryInventoryService.getCategoryInventoryById(
       _id,
     );
 
-    if (!cain) {
-=======
-    const license = await this.categoryInventoryService.getCategoryInventoyById(
-      _id,
-    );
 
-    if (!license) {
->>>>>>> 17777f6ed1e81cc2f0ffec0b466fbcc0c74cbd02
+    if (!cain) {
       throw new NotFoundException(`License with ID ${_id} not found`);
     }
 
