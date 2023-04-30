@@ -28,7 +28,7 @@ export class CategoryInventoryService {
    * @returns CategoryInventory[]
    *
    */
-  async getCategoryInventory(): Promise<CategoryInventory[]> {
+  async getCategoryInventorys(): Promise<CategoryInventory[]> {
     return await this.repositoryCategoryInventory.find({
       where: {
         active_status: true,
@@ -38,14 +38,14 @@ export class CategoryInventoryService {
 
   /**
    *
-   * Function findCategoryInventoryByFilter
+   * Function findCategoryInventoryByFilters
    * return an array o single category filtered
    *
    * @param {CategoryInventoryFindInput} categoryInventoryFindInput
    * @return CategoryInventory[]
    *
    */
-  async findCategoryInventoryById(
+  async findCategoryInventoryByFilters(
     categoryInventoryFindInput: CategoryInventoryFindInput,
   ): Promise<CategoryInventory[]> {
     const option: FindManyOptions<CategoryInventory> = {
@@ -104,6 +104,11 @@ export class CategoryInventoryService {
   async createCategoryInventory(
     categoryInventoryInput: CategoryInventoryInput,
   ): Promise<CategoryInventory> {
+        const options: FindOneOptions<CategoryInventory> = { where: { _id: categoryInventoryInput._id } };
+        const check = await this.repositoryCategoryInventory.findOne(options);
+        
+        if(check) throw new Error("Category ID already exists.");
+
         let cain = this.repositoryCategoryInventory.create(categoryInventoryInput);
         cain.createdAt = new Date(Date.now());
         cain.modifiedAt = new Date(Date.now());
@@ -121,11 +126,11 @@ export class CategoryInventoryService {
      *  @return Inventory
      * 
      */
-  async updateInventory(
+  async updateCategoryInventory(
     _id: string,
     categoryInventoryUpdate: CategoryInventoryUpdate,
   ): Promise<CategoryInventory> {
-        let data = categoryInventoryUpdate;
+        let data: CategoryInventoryUpdate = categoryInventoryUpdate;
         data.modifiedAt = new Date(Date.now());
         await this.repositoryCategoryInventory.update(_id, data);
         return this.repositoryCategoryInventory.findOne({ where: { _id } });
