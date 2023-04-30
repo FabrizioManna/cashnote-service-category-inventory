@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { CategoryInventoryModule } from './category-inventory/category-inventory.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { GraphQLModule, ApolloDriverConfig } from '@nestjs/graphql';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriverConfig } from '@nestjs/apollo';
 import { ApolloDriver } from '@nestjs/apollo';
 import { CategoryInventory } from './category-inventory/entities/category-inventory.entity';
 @Module({
@@ -27,6 +27,6 @@ import { CategoryInventory } from './category-inventory/entities/category-invent
     CategoryInventoryModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [],
 })
 export class AppModule {}
