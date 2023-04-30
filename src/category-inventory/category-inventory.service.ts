@@ -131,7 +131,7 @@ export class CategoryInventoryService {
     _id: string,
     categoryInventoryUpdate: CategoryInventoryUpdate,
   ): Promise<CategoryInventory> {
-        let data = categoryInventoryUpdate;
+        let data: CategoryInventoryUpdate = categoryInventoryUpdate;
         data.modifiedAt = new Date(Date.now());
         await this.repositoryCategoryInventory.update(_id, data);
         return this.repositoryCategoryInventory.findOne({ where: { _id: data._id } });
